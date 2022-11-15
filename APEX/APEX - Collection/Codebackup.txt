@@ -1,0 +1,94 @@
+/*
+*Created by        : Linkeshvaran R 
+*Created Date      : 11-11-2022
+*Testclass Name    : null
+*Description       : This class is used to practice all collections
+__________________________  Change Log__________________________
+Modifiedby      Case-Log         Version         Change Date         Description
+_________________________________________________________________
+*/
+public class PracticeClass {
+
+/*
+* Method Name   : listMethods()
+* Description   : This method is used to practice list methods without SOQL
+* @params       : null
+* @return       : void 
+*Created by     : Linkeshvaran R 
+*Created Date   : 11-11-2022
+*/
+    
+    
+ public static void listMethod() {
+     
+     
+     //Without SOQL
+     List <Integer> idList = new List<Integer>(); // initialized a list
+     List <Integer> idList2 = new List<Integer>(); // initialized a list
+     
+     //adding elements to the list 
+     idList.add(120);
+     idList.add(125);
+     idList.add(130);
+     idList.add(135);
+     System.debug(idList);
+     idList2.add(200);
+     idList2.add(205);
+     System.debug(idList2);
+     
+     //This adds the element to the 0th index
+     idList.add(0,115); 
+     System.debug(idList);
+     
+     //got an element using index
+     System.debug(idList.get(0));
+     //got the index using element
+     System.debug(idList.indexOf(115));	
+     
+    // appended the idList2 to idList
+     idList.addAll(idList2);
+     System.debug(idList);  
+     
+     // to find size of the list 
+	 System.debug(idList.size());  
+    
+     // to compare a list with another list
+     System.debug(idList.equals(idList2));
+     
+     
+ /*---------------------------------------------SOQL----------------------------------------------------*/    
+     
+    // Created a new list for SOQL fetch 
+    
+     List<Account> accList = [Select id, Name FROM Account LIMIT 5];
+     System.debug(accList); 
+     
+     //gets the list at the 0th index
+     System.debug(accList.get(0));
+     
+     // using for each loop logged the names of the account 
+     for(Account a : accList) {
+         System.debug(a.Name);
+     }
+     
+     // Creating a new list for my custom object Soldier
+     List<Soldier__c> soldList = new List<Soldier__c>();
+     
+     soldList = [Select Soldier_Name__c, Age__c FROM Soldier__c];
+     
+     //logging the records fetched from the query
+     System.debug(soldList);
+     
+     
+     for(Soldier__c s : soldList){
+         System.debug('The name is '+ s.Soldier_Name__c +' And he is '+ s.Age__c +' years old.');
+     }
+		     
+     
+     
+     
+     
+     
+        
+    }
+}

@@ -1,0 +1,314 @@
+/*
+    *Created by        : Linkeshvaran R 
+    *Created Date      : 14-11-2022
+    *Testclass Name    : null
+    *Description       : This class is used to practice queriying and collections
+    __________________________  Change Log__________________________
+    Modifiedby      Case-Log         Version         Change Date         Description
+    _________________________________________________________________
+    */
+
+
+public class QueryAssignment {
+	/*
+    * Method Name   : getHotRatingAccounts()
+    * Description   : This method is to query the 'Hot' Rating account records
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R 
+    *Created Date   : 14-11-2022
+    */
+    public static void getHotRatingAccounts(){
+        
+        List<Account> hotRatingAccList = [SELECT id, Name, Rating FROM Account WHERE Rating = 'Hot'];
+        System.debug(hotRatingAccList); 
+    }
+    
+    
+    /*
+    * Method Name   : getHotRatingAccounts()
+    * Description   : This method is to query and iterate New Cases records to the list
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R 
+    *Created Date   : 14-11-2022
+    */
+    public static void getNewCasesRecords(){
+        
+        //Declared a Case list
+        List<Case>newCaseList = new List<Case>();
+        
+        //Iterating the fetched query from Case where case status is 'New'
+        for(Case newCase : [SELECT id, CaseNumber, Status FROM Case WHERE Status='New' ]){
+            System.debug(newCase);
+        }
+    }
+    
+    
+    /*
+    * Method Name   : getClosedCasesIds()
+    * Description   : This method is to query ,iterate and add case ids which are closed
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R 
+    *Created Date   : 11-11-2022
+    */
+    public static void getClosedCasesIds(){
+        
+        //Declared a set to store closed cases ids
+        Set<id> closedCasesId = new Set<id>();
+       
+        for(Case closedCases : [SELECT id FROM Case] ){
+            closedCasesId.add(closedCases.id);
+        }
+        System.debug(closedCasesId);
+        
+    }
+    
+    
+    
+   /*
+    * Method Name   : getCaseIdWithStatus()
+    * Description   : This method is to query and store the ids as the key and status as it's value
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R 
+    *Created Date   : 15-11-2022
+    */
+    
+    public static void getCaseIdWithStatus(){
+
+        Map <id,String> idWithStatusMap = new Map<id, String>();
+        
+       //fetching a list and iterating it and storing it in the map
+        for(Case idWithStatus : [SELECT id, Status FROM Case]){
+            
+            idWithStatusMap.put(idWithStatus.id, idWithStatus.Status);   
+        }
+        System.debug(idWithStatusMap);  
+    }
+    
+   /*
+    * Method Name   : getCaseStatusWithIds()
+    * Description   : This method is to query and store the ids as the key and status as it's value
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R 
+    *Created Date   : 15-11-2022
+    */
+    
+    
+    public static void getCaseStatusWithIds(){
+		
+        //Declaring a Map which has
+        Map <String,List<Case>> statusWithIdMap = new Map<String, List<Case>>();
+        
+        for(Case CaseStatusWithId : [SELECT id, Status FROM Case]){
+            if(statusWithIdMap.containsKey(CaseStatusWithId.Status)){
+                statusWithIdMap.get(CaseStatusWithId.Status).add(CaseStatusWithId);
+                
+            }else{
+                statusWithIdMap.put(CaseStatusWithId.Status, new List<Case>());
+                statusWithIdMap.get(CaseStatusWithId.Status).add(CaseStatusWithId);
+            }
+        }
+        System.debug(statusWithIdMap); 
+    }
+   
+    
+   /*
+    * Method Name   : getAccountWithRelatedContacts()
+    * Description   : This method is to query and store accounts with it's realted contacts
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R 
+    *Created Date   : 15-11-2022
+    */
+    public static void getAccountWithRelatedContacts(){
+        //Declaring a map and a list within the map to store the account and it's contacts
+        Map<Account,List<Contact>> accWithRelatedContactsMap = new Map <Account,List<Contact>>();
+        for(Account ac : [SELECT Id, Name, (SELECT Id, Name FROM Contacts) FROM Account]){
+            accWithRelatedContactsMap.put(ac,ac.Contacts);
+        }
+        System.debug(accWithRelatedContactsMap);
+       
+        
+        
+    }
+    
+    
+    /*
+    * Method Name   : getAccountContactId()
+    * Description   : This method gets the account id and contact id and store it in the map
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */
+
+  public static void getAccountContactId(){
+        //a map to store the account id along with it's contact id;
+        
+        Map<Id,List<Id>> accContactMap = new Map <Id,List<Id>>();
+        for(Contact con : [SELECT Id, AccountId FROM Contact]){
+            if(accContactMap.containsKey(con.AccountId)){
+                accContactMap.get(con.AccountId).add(con.Id);
+            }else{
+                accContactMap.put(con.AccountId, new List<Id>());
+                accContactMap.get(con.AccountId).add(con.Id);
+            }
+        }
+       System.debug(accContactMap);
+        
+    }    
+ 
+    
+   /*
+    * Method Name   : createAccountRecord()
+    * Description   : This method creates a record in account object
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */
+    public static void createAccountRecord(){
+        
+        //initializing an account
+        List<Account> newAcc = new List<Account>{
+            new Account(Name='New Account Added through Insert')
+                
+        };
+        
+        //creating an account
+        insert newAcc;
+        System.debug(newAcc);
+        
+    }
+    
+    /*
+    * Method Name   : updateAccountRecord()
+    * Description   : This method updates an existing record in account object
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */  
+    
+    public static void updateAccountRecord(){
+        
+        //Declared a list 
+        List<account> accRecordToUpdate = new List<Account>();
+        
+        
+        for(Account acc : [SELECT Name FROM Account WHERE Name='New Account Added through Insert']){
+            acc.Name='New Account Updated';
+            accRecordToUpdate.add(acc);
+        }
+        Update accRecordToUpdate;
+       
+    }
+    /*
+    * Method Name   : createTenRecords()
+    * Description   : This create 10 records
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */ 
+    public static void createTenRecords(){
+        //declaring a list for the creeation of the records
+        List<Account> newAccsList = new List<Account>();
+        for(Integer i =0; i<10; i++){
+            Account acc = new Account();
+            
+            acc.Name ='new Acc';
+            acc.Phone = '123456789';
+            newAccsList.add(acc);    
+        }
+        
+        //creates all records in the list
+        insert newAccsList;
+    }
+   	
+    /*
+    * Method Name   : updatesAllActiveAccToInactive()
+    * Description   : This updates the records which are active to inactive
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */   
+    public static void updatesAllActiveAccToInactive(){
+        //declared a list
+        List <Account> accActiveStatusList = new List <Account>();
+        //querying accounts which are inactive
+        for(Account acc : [SELECT Active__c  FROM Account WHERE Active__c='Yes']){
+            acc.Active__c = 'No';
+            accActiveStatusList.add(acc);
+            
+        }
+        update accActiveStatusList;// updates the records
+    }
+    
+    
+   /*
+    * Method Name   : updatesContactCountInAcc()
+    * Description   : This updates the contact count in account object
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */ 
+    public static void updatesContactCountInAcc(){
+        
+        //created this map to find the number of contact associated with the id
+        Map<Id,Integer> contCountOfAccMap = new Map <Id,Integer>();
+        
+        
+        for(Contact con : [SELECT id, AccountId FROM Contact]){
+            if(contCountOfAccMap.containsKey(con.AccountId)){
+                
+                contCountOfAccMap.put(con.AccountId,contCountOfAccMap.get(con.AccountId)+1);
+            }else{
+                contCountOfAccMap.put(con.AccountId,1);
+            }
+            
+        }
+        
+        
+        
+    }    
+        /*----------------------------------------------------------------------------*/
+    /*
+    * Method Name   : deleteClosedCaseRecords()
+    * Description   : This deletes all case records whose case is closed
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */      
+        public static void deleteClosedCaseRecords(){
+            list <Case> caseList = [SELECT Id FROM Case WHERE Status='Closed'];
+            //this deletes the cases which are closed
+            delete caseList;        
+    }
+    
+     /*
+    * Method Name   : upsertAccountRecord()
+    * Description   : This deletes all case records whose case is closed
+    * @params       : null
+    * @return       : void 
+    *Created by     : Linkeshvaran R
+    *Created Date   : 15-11-2022
+    */ 
+    public static void upsertAccountRecord(){
+        List<Account> accList = new List<Account>();
+        Account accObj1 = new Account();
+        accObj1.name='Inserted a new Name';
+       accList.add(accObj1);
+        
+         Account accObj2 = [SELECT Name FROM Account WHERE Name='aaa'];
+        accObj2.Name = 'Upserted aaa'; 
+        upsert(accList); // this inserts 'Inserted a new Name' and updates 'aaa' to 'Upserted aaa'
+    }    
+}
